@@ -1,0 +1,126 @@
+<div class="main d-flex flex-column align-items-center justify-content-between">
+  <div class="d-flex w-100 align-items-center justify-content-center bg-black">
+    <h1 class="text-center m-5 yellow-color"></h1>
+  </div>
+  <div class="d-flex justify-content-center align-items-center streams-container">
+    <div class="col-md-12 col-sm-12 col-xs-12 round-border m-5 bg-black">
+      <h1 class="pt-4 text-white">{{customerInfo?customerInfo.Email:""}}</h1>
+      <h1 class="pt-2 text-white">Balance: {{customerInfo?customerInfo.SatBalance:""}}</h1>
+      <div class="d-flex flex-column">
+        <h1 class="pt-2 text-white" for="streams">Streams:</h1>
+        <div class="d-flex flex-column streams-wrapper">
+          <div class="stream-item d-flex" [ngClass]="stream.StreamStatusId == 3 ? 'bg-streaming':'bg-yellow'" *ngFor="let stream of streams">
+            <span class="description">{{stream.Description}}</span>
+            <span class="amount-rate">{{stream.AmountRate}} sats/mb</span>
+            <span class="status">{{streamStatus[stream.StreamStatusId]}}</span>
+            <span class="actions d-flex justify-content-center align-items-center">
+              <button class="btn btn-default btn-circle btn-hover p-0 mr-3" [disabled]="stream.StreamStatusId != 1"
+                (click)="playStream(stream.StreamId)">
+                <img src="../assets/images/play.svg" width="24" height="24" />
+              </button>
+              <button class="btn btn-default btn-circle btn-hover p-0 mr-3" [disabled]="stream.StreamStatusId != 3"
+                (click)="stopStream(stream.StreamId)">
+                <img src="../assets/images/pause.svg" width="24" height="24" />
+              </button>
+            </span>
+          </div>
+          <!-- <dx-data-grid [dataSource]="streams" [showBorders]="true" class="grid-container"
+              [rowAlternationEnabled]="true">
+              <dxo-paging [pageSize]="10"> </dxo-paging>
+              <dxo-pager [visible]="true" [displayMode]="'compact'" [showPageSizeSelector]="true" [showInfo]="true"
+                [showNavigationButtons]="true" [allowedPageSizes]="[10, 25, 50, 100]">
+              </dxo-pager>
+              <dxi-column dataField="Description"></dxi-column>
+              <dxi-column dataField="AmountRate"></dxi-column>
+              <dxi-column dataField="StreamStatusId" caption="Stream Status" cellTemplate="streamStatusTemplate"></dxi-column>
+              <dxi-column dataField="StreamId" cellTemplate="streamActionTemplate" caption="" width="50"></dxi-column>
+              <div *dxTemplate="let data of 'streamStatusTemplate'">
+                <ng-container>
+                  {{streamStatus[data.value]}}
+                </ng-container>
+              </div>
+              <div *dxTemplate="let data of 'streamActionTemplate'">
+                <ng-container *ngIf="getStreamStatus(data.value) == 0">
+                  <dx-button [height]="20" class="btn btn-default btn-circle p-0 mr-3" (onClick)="playStream(data.value)">
+                    <img src="../assets/images/play.svg" width="20" height="20" />
+                  </dx-button>
+                </ng-container>
+                <ng-container *ngIf="getStreamStatus(data.value) == 2">
+                  <dx-button [height]="20" class="btn btn-default btn-circle p-0 mr-3" (onClick)="stopStream(data.value)">
+                    <img src="../assets/images/pause.svg" width="20" height="20" />
+                  </dx-button>
+                </ng-container>
+              </div>
+            </dx-data-grid> -->
+        </div>
+        <div class="d-flex mt-5 mb-5 button-style">
+          <button class="btn btn-default round-border mr-5 bg-yellow" data-bs-toggle="modal"
+            data-bs-target="#newDeposit" (click)="clickNewDepositBtn()"><span class="font-weight-bold">New
+              Deposit</span></button>
+          <button class="btn btn-default round-border bg-yellow" data-bs-toggle="modal"
+            data-bs-target="#viewDeposit"><span class="font-weight-bold">View Deposit</span></button>
+          <button class="d-none" data-bs-toggle="modal" data-bs-target="#newDepositQR" id="qrBtn"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-100" style="background-color: black">
+    <h1 class="text-center p-3 mb-0 yellow-color">Copyright@ 2024</h1>
+  </div>
+  <div class="modal" id="newDeposit">
+    <div class="d-flex modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content round-border " style="background-color: white;">
+        <h1 class="mt-4 mb-2 text-center" style="font-size: 25px;">New Deposit</h1>
+        <input type="text" class="form-control mt-3 mb-3" placeholder="Type the amount" [(ngModel)]="newDepositAmount"
+          type="number" />
+        <button class="btn btn-default round-border bg-yellow" (click)="createDeposit()"><span
+            class="font-weight-bold">Create</span></button>
+      </div>
+    </div>
+  </div>
+  <div class="modal" id="viewDeposit">
+    <div class="d-flex modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content round-border " style="background-color: white;">
+        <h1 class="mt-4 mb-2 text-center" style="font-size: 25px;">View Deposits</h1>
+        <select type="text" class="form-select mt-3 mb-3 round-border" (change)="viewDeposit($event)"
+          [(ngModel)]="depositId">
+          <option value="">Select Deposit</option>
+          <option *ngFor="let deposit of deposits" [value]="deposit.DepositId">Deposit Id: {{deposit.DepositId}}
+          </option>
+        </select>
+        <div class="p-3 deposit-wrapper">
+          <div *ngIf="deposit">
+            <p>Deposit Id: {{deposit.DepositId}} Amount: {{deposit.Amount}} Status:
+              <span *ngIf="deposit.StatusId==1">Pending</span><span *ngIf="deposit.StatusId==2">Confirmed</span>
+            </p>
+            <p>Creation Date: {{deposit.CreationDate}}</p>
+            <p>Update Date: {{deposit.UpdateDate}}</p>
+          </div>
+          <div *ngIf="!deposit">
+            Nothing to show
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal" id="newDepositQR">
+    <div class="d-flex modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content round-border " style="background-color: white;">
+        <h1 class="mt-4 mb-2 text-center" style="font-size: 25px;">New Deposit QR Code</h1>
+        <div class="mt-3 mb-3">
+          <div *ngIf="!deposited">
+            <ngx-qrcode *ngIf="!spinner" [value]="newDepositQRCode" cssClass="bshadow">
+            </ngx-qrcode>
+            <div *ngIf="spinner" class="spinner">
+              <app-spinner></app-spinner>
+            </div>
+          </div>
+          <div *ngIf="deposited" class="spinner">
+            <span class="message">Successfully paid&nbsp;</span>
+            <img src="../assets/images/check.svg" width="30" height="30" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

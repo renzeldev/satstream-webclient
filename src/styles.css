@@ -1,0 +1,61 @@
+/* You can add global styles to this file, and also import other style files */
+
+.main {
+    background: url('./assets/images/background.png');
+    min-height: 100vh;
+}
+
+.custom-input:disabled {
+    background-color: white !important;
+}
+
+.round-border {
+    border: 2px solid black;
+    border-radius: 20px !important;
+}
+
+h1 {
+    font-size: 1.5rem !important
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+a:hover img {
+    opacity: 0.5;
+}
+
+.stream-info-field {
+    height: 12vh !important;
+}
+
+.btn-circle {
+    border-radius: 50% !important;
+    border:none !important;
+  }
+
+  .bshadow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(5px 5px 5px #222222);
+    opacity: .5;
+}
+
+.bshadow img {
+    width: 250px !important;
+} 
+
+.bg-yellow {
+    background-color: #EABA1A !important;
+}
+
+.yellow-color {
+    color: #EABA1A !important;
+}
+
+.bg-streaming {
+    background-color: #F8963F;
+}
+  
